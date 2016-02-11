@@ -1,0 +1,28 @@
+
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+/**
+ *
+ * @author BlakeAllen
+ */
+public class Window extends Canvas {
+
+    public Window(int width, int height, String name, Game game) {
+        JFrame jf = new JFrame();
+        jf.setResizable(false);
+        jf.setVisible(true);
+        jf.setPreferredSize(new Dimension(width, height));
+        jf.setMaximumSize(new Dimension(width, height));
+        jf.setMinimumSize(new Dimension(width, height));
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       /* JPanel j1 = new JPanel();
+        j1.setBounds(0, 0, width, 70);*/
+        jf.setLocationRelativeTo(null);
+        jf.add(game);
+        game.start();
+    }
+}
