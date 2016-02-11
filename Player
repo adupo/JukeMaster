@@ -1,0 +1,136 @@
+
+//import static csc_1000lines.ID.Health;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import javax.swing.JPanel;
+
+/**
+ *
+ * @author BlakeAllen
+ */
+public class Player extends GameObject{
+
+    static boolean collisionH = false, collisionS = false, collisionC = false, collisionB= false,
+     takeDamage = true;
+    static int removeId = 0;
+    Handler handler;
+    static int timer = 0;
+    static float PlayerX = (float)0;
+    static float PlayerY = (float)0;
+
+    public Player(int x, int y, ID id, Handler handler, int Id) {
+        super(x, y, id, Id);
+        this.handler = handler;
+        Id = handler.counter;
+    }
+
+    public void tick() {
+        x += speedX;
+        y += speedY;
+
+        x = Game.clamp((int) x, 0, Game.WIDTH - 26);
+        y = Game.clamp((int) y, 70, Game.HEIGHT - 47);
+        collision();
+        PlayerX = x;
+        PlayerY = y;
+        //if(!takeDamage)
+        //if(timer>0){
+        // timer--;
+        //}
+        if (Hud.HP <= 0) {
+        	System.out.println(Hud.getlvl());
+            System.exit(0);
+        }
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, 24, 24);
+    }
+
+    public void collision() {
+        for (GameObject tmp : handler.object) {
+            if (tmp.getId() == ID.Health) {
+                if (getBounds().intersects(tmp.getBounds())) {
+                    Hud.HP += Health.damage;
+                    removeId = tmp.Id;
+                    collisionH = true;
+                }
+            }
+            if (tmp.getId() == ID.Sheild) {
+                if (getBounds().intersects(tmp.getBounds())) {
+                    removeId = tmp.Id;
+                    collisionS = true;
+
+                }
+
+            }
+            if (tmp.getId() == ID.Coin) {
+                if (getBounds().intersects(tmp.getBounds())) {
+                    removeId = tmp.Id;
+                    collisionC = true;
+                }
+            }
+            if (tmp.getId() == ID.Bullet) {
+                if (getBounds().intersects(tmp.getBounds())) {
+                    removeId = tmp.Id;
+                    collisionB = true;
+                	if(!takeDamage){
+                    	Hud.sheildHp -= Enemy.damage;
+                    }
+                    else{
+                    Hud.HP -= Enemy.damage;
+                	}
+                }
+                }
+            
+            if (tmp.getId() == ID.Enemy) {
+                if (getBounds().intersects(tmp.getBounds())) {
+                    if(!takeDamage){
+                    	Hud.sheildHp -= Enemy.damage;
+                    }
+                    else{
+                    Hud.HP -= Enemy.damage;
+                	}
+                }
+            }
+            if (tmp.getId() == ID.SpeedyE) {
+            	if (getBounds().intersects(tmp.getBounds())) {
+                   if(!takeDamage){
+                    	Hud.sheildHp -= Enemy.damage;
+                    }
+                    else{
+                    Hud.HP -= Enemy.damage;
+                	}
+                }}
+            if (tmp.getId() == ID.Follower) {if (getBounds().intersects(tmp.getBounds())) {
+                   if(!takeDamage){
+                    	Hud.sheildHp -= Enemy.damage;
+                    }
+                    else{
+                    Hud.HP -= Enemy.damage;
+                	}
+                }}
+            if (tmp.getId() == ID.Boss1) {if (getBounds().intersects(tmp.getBounds())) {
+                   if(!takeDamage){
+                    	Hud.sheildHp -= Enemy.damage;
+                    }
+                    else{
+                    Hud.HP -= Enemy.damage;
+                	}
+                }}
+        
+    }}
+
+    @Override
+    public void render(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g.setColor(Color.magenta);
+        g.fillOval((int) x, (int) y, 40,40);
+        g.setColor(Color.WHITE);
+        g.drawOval((int) x, (int) y, 40,40);
+        g.drawString("Health", 45, 45);
+        JPanel jp = new JPanel();
+    }
+}
