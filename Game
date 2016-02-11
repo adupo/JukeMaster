@@ -1,0 +1,138 @@
+
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.util.Random;
+
+/**
+ *
+ * @author BlakeAllen
+ */
+public class Game extends Canvas implements Runnable {
+
+    public static final int WIDTH = 1020;
+    public static final int HEIGHT = WIDTH / 12 * 9;
+    private Thread thread;
+    private boolean working = false;
+    private Handler handler;
+    private Random Rand;
+    private Hud hud;
+    private Spawner spawn;
+
+    /* public enum State{
+     Menu,
+     Game;
+     };*/
+    //public State gameState = State.Menu;
+    public Game() {
+        handler = new Handler();
+        //menu = new Menu(this,handler);
+        this.addKeyListener(new keyInput(handler));
+        //this.addMouseListener(menu);
+        new Window(WIDTH, HEIGHT, "Gravity!", this);
+        hud = new Hud();
+        spawn = new Spawner(handler, hud);
+        Rand = new Random();
+        //if(gameState== State.Game){
+        handler.add(new Player(WIDTH / 2, HEIGHT / 2, ID.Player, handler, handler.counter));
+        //handler.add(new Enemy((Game.WIDTH/2)-30,Game.HEIGHT/2+200, ID.Boss1, handler));
+        //}
+    }
+
+    public synchronized void start() {
+        Thread thread = new Thread(this);
+        thread.start();
+        working = true;
+    }
+
+    public synchronized void stop() {
+        try {
+            thread.join();
+            working = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        this.requestFocus();
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+        while (working) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            while (delta >= 1) {
+                tick();
+                delta--;
+            }
+            if (working) {
+                render();
+            }
+            frames++;
+
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                //System.out.println("FPS =>" + frames);
+                //System.out.println(Hud.sheildHp+" , "+SheildBar.SheildCounter);
+                for (int i = 0; i<Handler.object.size(); i++){
+                System.out.print(Handler.object.get(i)+", id ="+ handler.object.get(i).Id);
+                }System.out.println();
+                frames = 0;
+                
+            }
+        }
+        stop();
+    }
+
+    private void tick() {
+        handler.tick();
+        //if(gameState == State.Game){
+        hud.tick();
+        spawn.tick();
+        //}else if(gameState == State.Menu){
+        //menu.tick();
+        //}
+
+    }
+
+    public void render() {
+        BufferStrategy buff = this.getBufferStrategy();
+        if (buff == null) {
+            this.createBufferStrategy(3);
+            return;
+        }
+        Graphics gr = buff.getDrawGraphics();
+        gr.setColor(Color.black);
+        gr.fillRect(0, 0, WIDTH, HEIGHT);
+        hud.render(gr);
+        handler.render(gr);
+        //if(gameState== State.Game){
+
+        //}else if(gameState == State.Menu){
+        //menu.render(gr);
+        //}
+        gr.dispose();
+        buff.show();
+    }
+
+    public static float clamp(float x, float min, float max) {
+        if (x >= max) {
+            return x = max;
+        } else if (x <= min) {
+            return x = min;
+        } else {
+            return x;
+        }
+    }
+
+    public static void main(String[] args) {
+        new Game();
+    }
+}
