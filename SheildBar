@@ -1,0 +1,47 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
+
+public class SheildBar extends GameObject{
+
+Handler handler;
+public static int SheildCounter = 0; 
+    public SheildBar(float x, float y, ID id, Handler handler, int Id) {
+        super(x, y, id, Id);
+        this.handler = handler;
+        Id = Handler.counter;
+        Player.takeDamage = false;
+        Player.collisionS = false;
+        SheildCounter++;
+        if(SheildCounter>1){
+        	Hud.sheildHp = 100;
+        }
+
+    }
+
+    public void tick() {
+        if(Hud.sheildHp <= 0){
+            //Player.collisionS = false;
+            Player.takeDamage = true;
+            handler.remove(this);
+            
+        }
+        
+    }
+     public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, 0, 0);
+    }
+   public void render(Graphics g) {
+   			g.setColor(new Color(0,255,255));
+        	g.fillOval((int) Player.PlayerX, (int) Player.PlayerY, 40,40);
+            g.setColor(Color.GRAY);
+            g.fillRect(15, 48, 200, 8);
+        	g.setColor(new Color(0,255, 255));
+            g.fillRect(15, 48,(int)Hud.sheildHp * 2, 8);
+            g.setColor(Color.white);
+            g.drawRect(15, 48, (int)Hud.sheildHp *2, 8);
+        }
+    }
+
+
