@@ -1,0 +1,62 @@
+
+import java.awt.Graphics;
+import java.util.ArrayList;
+
+/**
+ *
+ * @author BlakeAllen
+ */
+public class Handler {
+	public static int counter = 0;
+    static ArrayList<GameObject> object = new ArrayList<GameObject>();
+
+    public void tick() {
+        for (int i = 0; i < object.size(); i++) {
+            GameObject tmp = object.get(i);
+            tmp.tick();
+        }
+    }
+
+    public void render(Graphics g) {
+        for (int i = 0; i < object.size(); i++) {
+            GameObject tmp = object.get(i);
+            tmp.render(g);
+        }
+    }
+
+    public void add(GameObject object) {
+        counter++;
+        this.object.add(object);
+    }
+
+    public void remove(int i) {
+        this.object.remove(i);
+        for (int j = 0; j < object.size(); j++) {
+            GameObject tmp = object.get(j);
+            tmp.Id = j;
+    	}
+    	counter--;
+    }
+    public void remove(GameObject object){
+    	this.object.remove(object);
+    	for (int j = 0; j < this.object.size(); j++) {
+             GameObject tmp = this.object.get(j);
+            tmp.Id = j;          
+        	}
+        counter--;
+    	}
+    
+
+    public void clearAll() {
+        for (int i = 0; i < object.size(); i++) {
+            GameObject tmp = object.get(i);
+            if (tmp.getId() == ID.Player) {
+                object.clear();
+                counter = 0;
+                add(new Player((int) tmp.getX(), (int) tmp.getY(), ID.Player, this, counter));
+            }
+        }
+        counter = 1;
+    }
+    }
+
