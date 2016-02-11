@@ -1,0 +1,54 @@
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+/**
+ *
+ * @author BlakeAllen
+ */
+public class Hud {
+
+    public static float HP = 100;
+    public static float sheildHp = 100;
+    private float greenValue = 255;
+    private static int score = 0;
+    private static int lvl = 1;
+
+    public void tick() {
+        HP = (int) Game.clamp((int) HP, 0, 100);
+        greenValue = (int) Game.clamp(greenValue, 0, 255);
+        sheildHp = (int) Game.clamp((int)sheildHp,0,100);
+        greenValue = HP * 2;
+        //score++;
+
+    }
+
+    public void render(Graphics g) {
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0, 0, Game.WIDTH, 70);;
+        g.setColor(Color.GRAY);
+        g.fillRect(15, 15, 200, 32);
+        g.setColor(new Color(75, (int) greenValue, 0));
+        g.fillRect(15, 15, (int) HP * 2, 32);
+        g.setColor(Color.white);
+        g.drawRect(15, 15, (int) HP * 2, 32);
+        g.drawString("Score " + score, Game.WIDTH - 125, 64);
+        g.drawString("Level " + lvl, Game.WIDTH - 125, 32);
+    }
+
+    public static void score(int score) {
+        Hud.score = score;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static int getlvl() {
+        return lvl;
+    }
+
+    public void lvl(int lvl) {
+        this.lvl = lvl;
+    }
+}
