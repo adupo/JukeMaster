@@ -1,0 +1,51 @@
+
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
+/**
+ *
+ * @author BlakeAllen
+ */
+public class Follower extends GameObject {
+
+    Handler handler;
+    static int damage = 2;
+    private GameObject player;
+
+    public Follower(int x, int y, ID id, Handler handler, int Id) {
+        super(x, y, id, Id);
+        this.handler = handler;
+        for (int i = 0; i < handler.object.size(); i++) {
+            if (handler.object.get(i).getId() == ID.Player) {
+                player = handler.object.get(i);
+            }
+        }
+    }
+
+    public void tick() {
+        x += speedX;
+        y += speedY;
+
+        float Xdiff = x - player.getX() - 8;
+        float Ydiff = y - player.getY() - 8;
+        float dis = (float) Math.sqrt((x - player.getX()) * (x - player.getX()) + (y - player.getY()) * (y - player.getY()));
+        speedX = (float) ((-1.0 / dis) * Xdiff);
+        speedX = (float) ((-1.0 / dis) * Ydiff);
+        x = Game.clamp((int) x, 0, Game.WIDTH - 26);
+        y = Game.clamp((int) y, 70, Game.HEIGHT - 47);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int) x, (int) y, 24, 24);
+    }
+
+    public void render(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g.setColor(Color.WHITE);
+        g.fillRect((int) x, (int) y, 12, 12);
+        g.setColor(Color.white);
+        g.drawRect((int) x, (int) y, 12, 12);
+    }
+}
